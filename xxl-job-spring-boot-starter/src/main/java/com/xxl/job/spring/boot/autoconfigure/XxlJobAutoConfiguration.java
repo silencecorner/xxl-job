@@ -62,7 +62,7 @@ public class XxlJobAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public XxlJobAdminApi timRestApi(OkHttpClient okHttpClient) {
+    public XxlJobAdminApi xxlJobAdminApi(OkHttpClient okHttpClient) {
         return new XxlJobAdminApi(properties.getAdmin(),properties.getExecutor().getAppName(), okHttpClient);
     }
 }

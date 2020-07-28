@@ -40,8 +40,8 @@ public class XxlJobAdminApi {
         this.expireUntil = LocalDateTime.now().plus(properties.getCookieExpireAfter());
         this.appName = appName;
         ReturnT<String> returnT = login();
-        if (returnT == null) {
-            LOGGER.info("重新登录获取cookie,返回结果code [{}] msg [{}] content [{}]", returnT.getCode(), returnT.getMsg(), returnT.getContent());
+        if (null == returnT && returnT.getCode() == 200) {
+            LOGGER.info("重新登录获取cookie");
         }else{
             LOGGER.error("未能成功登录xxl-job-admin请检查");
         }
@@ -79,10 +79,10 @@ public class XxlJobAdminApi {
         Map<String,String> param = new HashMap<>(1);
         param.put("appname",appName);
         Type type = new TypeToken<Map<String,Object>>(){}.getType();
-        Map<String,Object> result = this.getForObject("/jobgroup/pageList",param,type);
+        Map<String,Object> result = this.getForObject(getUrl("/jobgroup/pageList"),param,type);
         if (null != result && result.get("data") != null){
             Map<String,Object> first = ((ArrayList<Map<String,Object>>)result.get("data")).get(0);
-            return Integer.valueOf(first.get("id").toString());
+            return Double.valueOf(first.get("id").toString()).intValue();
         }
         throw new RuntimeException(String.format("未找到[{}]的jobGroupId",appName));
     }
@@ -91,17 +91,18 @@ public class XxlJobAdminApi {
         Type type = new TypeToken<ReturnT<String>>(){}.getType();
         String url = properties.getAddresses() + "/login";
         Map<String,String> map = new HashMap<>(2);
-        map.put("userName",properties.getUsername());
-        map.put("password",properties.getPassword());
         Request request = new Request.Builder()
-                .post(FormBody.create(JSON,GSON.toJson(map)))
+                .post(new FormBody.Builder()
+                        .addEncoded("userName",properties.getUsername())
+                        .addEncoded("password",properties.getPassword())
+                        .build())
                 .url(url)
                 .build();
         try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.body() == null) {
                 return null;
             }
-            cookie = response.header("Cookie");
+            cookie = response.header("Set-Cookie");
             return GSON.fromJson(new InputStreamReader(response.body().byteStream()), type);
         } catch (IOException e) {
             throw new UnexpectException(e);
@@ -119,6 +120,13 @@ public class XxlJobAdminApi {
     }
 
     private <T> T postFormForObject(String url, Object req, Type type) {
+        FormBody.Builder builder = new FormBody.Builder();
+        if (req != null){
+            final Map<String,String> map =  GSON.fromJson(GSON.toJson(req), new TypeToken<Map<String,String>>(){}.getType());
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                builder.addEncoded(entry.getKey(), entry.getValue());
+            }
+        }
         Request request = new Request.Builder()
                 .post(FormBody.create(JSON, GSON.toJson(req)))
                 .header("Cookie", cookie)
