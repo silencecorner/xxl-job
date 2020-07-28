@@ -50,7 +50,7 @@ public class XxlJobAdminApi {
 
     public ReturnT<String> addJob(XxlJobInfo xxlJobInfo){
         Type type = new TypeToken<ReturnT<String>>(){}.getType();
-        return postFormForObject(getUrl("/jobinfo/add"),xxlJobInfo,type);
+        return this.postFormForObject(getUrl("/jobinfo/add"),xxlJobInfo,type);
     }
 
     public ReturnT<String> updateJob(XxlJobInfo xxlJobInfo){
@@ -128,7 +128,7 @@ public class XxlJobAdminApi {
             }
         }
         Request request = new Request.Builder()
-                .post(FormBody.create(JSON, GSON.toJson(req)))
+                .post(builder.build())
                 .header("Cookie", cookie)
                 .url(url)
                 .build();
