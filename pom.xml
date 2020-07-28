@@ -14,8 +14,9 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
-    <module>xxl-job-spring-boot-starter</module>
-  </modules>
+    	<module>xxl-job-spring-boot-starter</module>
+        <module>xxl-job-admin-sdk</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

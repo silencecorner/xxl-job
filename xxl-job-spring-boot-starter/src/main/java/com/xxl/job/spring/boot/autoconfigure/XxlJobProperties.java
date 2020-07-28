@@ -1,12 +1,8 @@
 package com.xxl.job.spring.boot.autoconfigure;
 
+import io.github.silencecorner.XxlJobAdminProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author yangyanju
- * @version 1.0
- * @date 2019-04-11
- */
 @ConfigurationProperties("xxl.job")
 public class XxlJobProperties {
     /**
@@ -17,7 +13,7 @@ public class XxlJobProperties {
      * xxl-job, access token：执行器通讯TOKEN
      */
     private String accessToken;
-    private AdminProperties admin;
+    private XxlJobAdminProperties admin;
     private ExecutorProperties executor;
 
     public Boolean getEnabled() {
@@ -40,11 +36,11 @@ public class XxlJobProperties {
         }
     }
 
-    public AdminProperties getAdmin() {
+    public XxlJobAdminProperties getAdmin() {
         return admin;
     }
 
-    public void setAdmin(AdminProperties admin) {
+    public void setAdmin(XxlJobAdminProperties admin) {
         this.admin = admin;
     }
 
@@ -56,23 +52,6 @@ public class XxlJobProperties {
         this.executor = executor;
     }
 
-    /**
-     * AdminProperties
-     */
-    public static class AdminProperties {
-        /**
-         * xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行 `执行器心跳注册` 和 `任务结果回调`.
-         */
-        private String addresses;
-
-        public String getAddresses() {
-            return addresses;
-        }
-
-        public void setAddresses(String addresses) {
-            this.addresses = addresses;
-        }
-    }
 
     /**
      * ExecutorProperties
