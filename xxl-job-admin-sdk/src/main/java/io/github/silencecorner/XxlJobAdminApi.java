@@ -40,7 +40,7 @@ public class XxlJobAdminApi {
         this.expireUntil = LocalDateTime.now().plus(properties.getCookieExpireAfter());
         this.appName = appName;
         ReturnT<String> returnT = login();
-        if (null == returnT && returnT.getCode() == 200) {
+        if (null == returnT && returnT.getCode() == ReturnT.SUCCESS_CODE) {
             LOGGER.info("重新登录获取cookie");
         }else{
             LOGGER.error("未能成功登录xxl-job-admin请检查");
@@ -64,8 +64,8 @@ public class XxlJobAdminApi {
                 this.expireUntil = LocalDateTime.now().plus(properties.getCookieExpireAfter());
             }
             ReturnT<String> returnT = login();
-            if (returnT == null) {
-                LOGGER.info("重新登录获取cookie,返回结果code [{}] msg [{}] content [{}]", returnT.getCode(), returnT.getMsg(), returnT.getContent());
+            if (null != returnT && returnT.getCode() == ReturnT.SUCCESS_CODE) {
+                LOGGER.info("重新登录获取cookie成功");
             }else{
                 LOGGER.error("未能成功登录xxl-job-admin请检查");
             }
