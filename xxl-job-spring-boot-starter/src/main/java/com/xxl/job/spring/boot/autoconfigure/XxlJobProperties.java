@@ -2,6 +2,7 @@ package com.xxl.job.spring.boot.autoconfigure;
 
 import io.github.silencecorner.XxlJobAdminProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @ConfigurationProperties("xxl.job")
 public class XxlJobProperties {
@@ -13,6 +14,7 @@ public class XxlJobProperties {
      * xxl-job, access token：执行器通讯TOKEN
      */
     private String accessToken;
+    @NestedConfigurationProperty
     private XxlJobAdminProperties admin;
     private ExecutorProperties executor;
 
